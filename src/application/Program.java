@@ -5,32 +5,33 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import db.DB;
+import db.DbExceptions;
 
 public class Program {
 
 	public static void main(String[] args) {
 		
 		Connection conn = null;
-		PreparedStatement st =null;
+		PreparedStatement st = null;
 		
 		try {
 			conn = DB.getConnection();
 			
 			st = conn.prepareStatement(
-					"UPDATE seller "
-					+ "SET BaseSalary = BaseSalary + ? "
+					"DELETE FROM department "
 					+ "WHERE "
-					+ "(DepartmentId = ?)");
+					+"Id = ? "
+			);
 			
-			st.setDouble(1, 200.00);
-			st.setInt(2, 2);
+			st.setInt(1, 2);
 			
 			int rowsAffected = st.executeUpdate();
 			
-			System.out.println("Done! rows Afectted: "+ rowsAffected);
+			System.out.println("Done! Rows Afectted: "+ rowsAffected);
+			
 		}
 		catch(SQLException e) {
-			e.printStackTrace();
+			throw new DbExceptions(e.getMessage());
 		}
 		finally {
 			DB.closeStatement(st);
